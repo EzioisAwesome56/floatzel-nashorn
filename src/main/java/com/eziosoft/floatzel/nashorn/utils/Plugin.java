@@ -39,7 +39,7 @@ public class Plugin {
         // init the scripting engine
         ScriptEngineManager mngt = new ScriptEngineManager();
         mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn2");
+        ScriptEngine engine = mngt.getEngineByName("nashorn2");
         try {
             engine.eval("var imports = new JavaImporter(java.io, java.lang, java.util, com.eziosoft.floatzel, org.apache.commons.io.IOUtils);");
             // give plugins access to shit
@@ -108,7 +108,9 @@ public class Plugin {
     // get plugin information for registering
     public static String[] getPluginInfo(String filename) throws FileNotFoundException, LoadPluginException {
         // we dont need to load the entire plugin API, just enough to get the required strings from them
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+        ScriptEngineManager mngt = new ScriptEngineManager();
+        mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
+        ScriptEngine engine = mngt.getEngineByName("nashorn2");
         // load the plugin file
         try {
             engine.eval(new FileReader("plugins/" + filename + ".js"));
