@@ -2,7 +2,7 @@ package com.eziosoft.floatzel.nashorn;
 
 import com.eziosoft.floatzel.Commands.FCommand;
 import com.eziosoft.floatzel.Exception.GenericException;
-import com.eziosoft.floatzel.Util.Plugin;
+import com.eziosoft.floatzel.nashorn.utils.Plugin;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 public class BasePlugin extends FCommand {

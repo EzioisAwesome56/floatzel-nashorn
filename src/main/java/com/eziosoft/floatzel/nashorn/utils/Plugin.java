@@ -2,7 +2,7 @@ package com.eziosoft.floatzel.nashorn.utils;
 
 import com.eziosoft.floatzel.Exception.GenericException;
 import com.eziosoft.floatzel.nashorn.LoadPluginException;
-import com.eziosoft.floatzel.Util.Utils;
+
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.io.FileUtils;
@@ -16,6 +16,7 @@ import javax.script.ScriptException;
 import java.io.*;
 import java.util.Base64;
 import java.util.concurrent.ExecutionException;
+import com.eziosoft.floatzel.nashorn.Utils;
 
 public class Plugin {
     public static void runPlugin(CommandEvent event, String name) throws GenericException {
@@ -65,7 +66,7 @@ public class Plugin {
             if (!(boolean) runjs.invokeFunction("checkPermission", "")) {
                 // check if required permission is bot admin
                 if ((boolean) runjs.invokeFunction("isAdmin", "")) {
-                    if (!Utils.isAdmin(event.getAuthor().getId())) {
+                    if (!com.eziosoft.floatzel.Util.Utils.isAdmin(event.getAuthor().getId())) {
                         event.getChannel().sendMessage("Error: you are not a bot admin! You cannot run this plugin!").queue();
                         return;
                     }
@@ -86,22 +87,6 @@ public class Plugin {
             // until i can handle errors better, just print stack trace
             e.printStackTrace();
             return;
-        }
-    }
-
-    // used to convert strings produced by js back to byte[]
-    public static void JSFileSend(String file, CommandEvent e, String filename){
-        // first, get a byte array from the string
-        e.getChannel().sendFile(Base64.getDecoder().decode(file), filename, null).queue();
-    }
-
-    // used to convert byte[] to strings
-    public static String attachTostring(Message m){
-        try {
-            return new String(Base64.getEncoder().encode(IOUtils.toByteArray(m.getAttachments().get(0).retrieveInputStream().get())));
-        } catch (IOException | ExecutionException | InterruptedException e){
-            e.printStackTrace();
-            return "fuck";
         }
     }
 

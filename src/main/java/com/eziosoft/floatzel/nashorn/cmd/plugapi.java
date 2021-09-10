@@ -51,7 +51,7 @@ public class plugapi extends FCommand {
             }
             // then register it
             Floatzel.commandClient.addCommand(new BasePlugin(info[0], argsplit[1], info[1]));
-            event.getChannel().sendMessage("Plugin has been fucking loaded!").queue();
+            event.getChannel().sendMessage("Plugin has been loaded!").queue();
             return;
         } else if (argsplit[0].equals("run")) {
             try {
