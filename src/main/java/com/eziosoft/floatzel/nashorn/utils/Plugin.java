@@ -1,7 +1,7 @@
 package com.eziosoft.floatzel.nashorn.utils;
 
 import com.eziosoft.floatzel.Exception.GenericException;
-import com.eziosoft.floatzel.Exception.LoadPluginException;
+import com.eziosoft.floatzel.nashorn.LoadPluginException;
 import com.eziosoft.floatzel.Util.Utils;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
@@ -63,12 +63,12 @@ public class Plugin {
                 // check if required permission is bot admin
                 if ((boolean) runjs.invokeFunction("isAdmin", "")) {
                     if (!Utils.isAdmin(event.getAuthor().getId())) {
-                        event.getChannel().sendMessage("Error: you are not a fucking bot admin! You cannot run this plugin!").queue();
+                        event.getChannel().sendMessage("Error: you are not a bot admin! You cannot run this plugin!").queue();
                         return;
                     }
                 } else if ((boolean) runjs.invokeFunction("isOwner", "")) {
                     if (!event.isOwner()) {
-                        event.getChannel().sendMessage("Error: you arent a fucking bot owner and cant run this plugin!").queue();
+                        event.getChannel().sendMessage("Error: you arent a bot owner and cant run this plugin!").queue();
                         return;
                     }
                 }
@@ -77,7 +77,7 @@ public class Plugin {
             // try running the plugin
             runjs.invokeFunction("run", "");
         } catch (FileNotFoundException e){
-            event.getChannel().sendMessage("The fucking plugin you tired to run doesnt exist asswipe!").queue();
+            event.getChannel().sendMessage("The plugin you tired to run doesnt exist!").queue();
             return;
         } catch (ScriptException | NoSuchMethodException e){
             // until i can handle errors better, just print stack trace
