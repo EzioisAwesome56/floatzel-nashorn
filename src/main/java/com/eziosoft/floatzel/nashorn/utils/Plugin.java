@@ -7,6 +7,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -36,7 +37,9 @@ public class Plugin {
         }
 
         // init the scripting engine
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+        ScriptEngineManager mngt = new ScriptEngineManager();
+        mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn2");
         try {
             engine.eval("var imports = new JavaImporter(java.io, java.lang, java.util, com.eziosoft.floatzel, org.apache.commons.io.IOUtils);");
             // give plugins access to shit

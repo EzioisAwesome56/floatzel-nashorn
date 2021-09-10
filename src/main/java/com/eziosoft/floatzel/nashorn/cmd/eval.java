@@ -2,6 +2,7 @@ package com.eziosoft.floatzel.nashorn.cmd;
 
 import com.eziosoft.floatzel.Commands.FCommand;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -23,7 +24,9 @@ public class eval extends FCommand {
             return;
         }
         // enable the scripting manager
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+        ScriptEngineManager mngt = new ScriptEngineManager();
+        mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
+        ScriptEngine engine = mngt.getEngineByName("nashorn2");
         try{
             engine.eval("var imports = new JavaImporter(java.io, java.lang, java.util, com.eziosoft.floatzel);");
         } catch (ScriptException e){
