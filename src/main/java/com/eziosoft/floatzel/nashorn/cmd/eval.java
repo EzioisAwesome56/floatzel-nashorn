@@ -4,11 +4,12 @@ import com.eziosoft.floatzel.Commands.FCommand;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import org.apache.commons.lang3.JavaVersion;
 import org.apache.commons.lang3.SystemUtils;
-import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.lang.reflect.InvocationTargetException;
 
 public class eval extends FCommand {
 
@@ -29,7 +30,17 @@ public class eval extends FCommand {
         ScriptEngineManager mngt = new ScriptEngineManager();
         ScriptEngine engine;
         if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_15)){
-            mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
+            try {
+                mngt.registerEngineName("nashorn2", (ScriptEngineFactory) eval.class.getClassLoader().loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory").getConstructor().newInstance());
+            } catch (ClassNotFoundException | NoSuchMethodException e){
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
             engine = mngt.getEngineByName("nashorn2");
         } else {
             engine = mngt.getEngineByName("nashorn");

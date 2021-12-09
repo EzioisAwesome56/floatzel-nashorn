@@ -3,19 +3,17 @@ package com.eziosoft.floatzel.nashorn.utils;
 import com.eziosoft.floatzel.Exception.GenericException;
 import com.eziosoft.floatzel.nashorn.LoadPluginException;
 
+import com.eziosoft.floatzel.nashorn.cmd.eval;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.JavaVersion;
 import org.apache.commons.lang3.SystemUtils;
-import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Base64;
 import java.util.concurrent.ExecutionException;
 import com.eziosoft.floatzel.nashorn.Utils;
@@ -43,7 +41,17 @@ public class Plugin {
         ScriptEngineManager mngt = new ScriptEngineManager();
         ScriptEngine engine;
         if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_15)){
-            mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
+            try {
+                mngt.registerEngineName("nashorn2", (ScriptEngineFactory) Plugin.class.getClassLoader().loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory").getConstructor().newInstance());
+            } catch (ClassNotFoundException | NoSuchMethodException e){
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
             engine = mngt.getEngineByName("nashorn2");
         } else {
             engine = mngt.getEngineByName("nashorn");
@@ -94,8 +102,6 @@ public class Plugin {
         } catch (ScriptException | NoSuchMethodException e){
             // until i can handle errors better, just print stack trace
             e.printStackTrace();
-            var f = "duck ass";
-            System.err.println(f);
             return;
         }
     }
@@ -104,8 +110,23 @@ public class Plugin {
     public static String[] getPluginInfo(String filename) throws FileNotFoundException, LoadPluginException {
         // we dont need to load the entire plugin API, just enough to get the required strings from them
         ScriptEngineManager mngt = new ScriptEngineManager();
-        mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
-        ScriptEngine engine = mngt.getEngineByName("nashorn2");
+        ScriptEngine engine;
+        if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_15)){
+            try {
+                mngt.registerEngineName("nashorn2", (ScriptEngineFactory) eval.class.getClassLoader().loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory").getConstructor().newInstance());
+            } catch (ClassNotFoundException | NoSuchMethodException e){
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            engine = mngt.getEngineByName("nashorn2");
+        } else {
+            engine = mngt.getEngineByName("nashorn");
+        }
         // load the plugin file
         try {
             engine.eval(new FileReader("plugins/" + filename + ".js"));
