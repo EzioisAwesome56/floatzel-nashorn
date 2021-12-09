@@ -1,4 +1,8 @@
 {
   "type": "commands",
-  "mainclass": "com.eziosoft.floatzel.nashorn.batch"
+  "mainclass": "com.eziosoft.floatzel.nashorn.batch",
+  "mainclasses": [
+    "com.eziosoft.floatzel.nashorn.cmd.eval",
+    "com.eziosoft.floatzel.nashorn.cmd.plugapi"
+  ]
 }
