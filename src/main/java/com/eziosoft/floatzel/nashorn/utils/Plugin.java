@@ -7,6 +7,8 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.JavaVersion;
+import org.apache.commons.lang3.SystemUtils;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.Invocable;
@@ -39,8 +41,14 @@ public class Plugin {
 
         // init the scripting engine
         ScriptEngineManager mngt = new ScriptEngineManager();
-        mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
-        ScriptEngine engine = mngt.getEngineByName("nashorn2");
+        ScriptEngine engine;
+        if (SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_15)){
+            mngt.registerEngineName("nashorn2", new NashornScriptEngineFactory());
+            engine = mngt.getEngineByName("nashorn2");
+        } else {
+            engine = mngt.getEngineByName("nashorn");
+        }
+
         try {
             engine.eval("var imports = new JavaImporter(java.io, java.lang, java.util, com.eziosoft.floatzel, org.apache.commons.io.IOUtils);");
             // give plugins access to shit
@@ -86,6 +94,8 @@ public class Plugin {
         } catch (ScriptException | NoSuchMethodException e){
             // until i can handle errors better, just print stack trace
             e.printStackTrace();
+            var f = "duck ass";
+            System.err.println(f);
             return;
         }
     }
